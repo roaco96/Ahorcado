@@ -284,9 +284,12 @@
                           <SubComponents>
                             <Component class="javax.swing.JButton" name="bResolver">
                               <Properties>
-                                <Property name="text" type="java.lang.String" value="jButton1"/>
+                                <Property name="text" type="java.lang.String" value="Resolver palabra"/>
                                 <Property name="actionCommand" type="java.lang.String" value="Resolver"/>
                               </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bResolverActionPerformed"/>
+                              </Events>
                             </Component>
                           </SubComponents>
                         </Container>

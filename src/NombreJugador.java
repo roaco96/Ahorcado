@@ -1,6 +1,13 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JButton;
@@ -29,23 +36,200 @@ public class NombreJugador extends javax.swing.JFrame {
     private NombreJugador ventana;
     private Random aleatorio;
     private ArrayList<String> letras;
-    private ArrayList<String> palabras;
     
     
-    public void comprobarLetras(String letra)
+    
+    public void reiniciarAhorcado()
     {
-        for (int i = 0; i < palabra.length(); i++) 
+        
+        for (int i = 0; i < mostrarPalabra.size(); i++) 
         {
-            if(String.valueOf(palabra.charAt(i)).equals(letra))
+            mostrarPalabra.get(i).setText("_");
+            
+        }
+        fallos=0;
+        int n_aleatorio=aleatorio.nextInt(27-0)+0;
+        palabra=palabraAleatoria(n_aleatorio);
+        
+        ventana = this;
+        
+        pBotones.removeAll();
+        for (int i = 0; i < 27; i++) 
+        {
+            int posicion=i;
+            String letra=letras.get(i);
+            final JButton boton=new JButton();
+            boton.setText(letras.get(i));
+            pBotones.add(boton);
+            
+            boton.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    
+                    if(comprobarLetras(letra, posicion)==false)
+                    {
+                        fallos++;
+                    }
+                    boton.setEnabled(false);
+                       
+                }
+            });
+        }
+        
+    }
+    
+    
+    public boolean comprobarN(int posicion)
+    {
+        boolean cierto=true;
+        for (int i = 0; i < mostrarPalabra.size(); i++) 
+        {
+
+            if(String.valueOf(palabra.charAt(i)).equals("Ñ")==true)
+            {
+                mostrarPalabra.get(i).setText("Ñ");
+            }
+            else
+            {
+                cierto=false;
+            }
+        }
+        
+        return cierto;
+        
+    }
+    
+    
+    
+    
+    public boolean comprobarLetras(String letra, int posicion)
+    {
+        boolean cierto=true;
+        
+        
+        for (int i = 0; i < mostrarPalabra.size(); i++) 
+        {
+
+            if(String.valueOf(palabra.charAt(i)).equals(letra)==true)
             {
                 mostrarPalabra.get(i).setText(letra);
             }
             else
             {
-                fallos++;
+                cierto=false;
+            }
+        }
+        
+        
+        if(comprobarTodasLasLetras()==true)
+        {
+            int respuesta = JOptionPane.showConfirmDialog(
+            this,
+            "¡Acertaste todas las letras de la palabra! Has ganado, ¿otra partida?",
+            "Ganaste",
+            JOptionPane.YES_NO_OPTION);
+            
+            if(respuesta==0)
+            {
+                reiniciarAhorcado();
             }
             
         }
+        return cierto;
+    }
+    
+    
+    public boolean comprobarTodasLasLetras()
+    {
+        boolean c=true;
+        int contador=0;
+        for (int i = 0; i < mostrarPalabra.size(); i++) 
+        {
+            if(mostrarPalabra.get(i).getText().equals("_")==true)
+            {
+                contador++;
+            }
+            
+        }
+        if(contador!=0)
+        {
+            c=false;
+        }
+        return c;
+    }
+    
+    
+    public boolean comprobarPalabra(String p)
+    {
+        boolean cierto;
+        if(p.equals(palabra)==true)
+        {
+            cierto=true;
+        }
+        else
+        {
+            cierto=false;
+        }
+        return cierto;
+    }
+    
+    
+    
+    public String palabraAleatoria(int n)
+    {
+        String p="";
+        
+        BufferedReader bufer=null;
+        InputStreamReader isr =null;
+        FileInputStream fis = null;
+        try
+        {
+            fis = new FileInputStream("ahorcado.txt");
+            isr = new InputStreamReader(fis, "ISO-8859-1");
+            BufferedReader bf = new BufferedReader(isr);
+            
+            for (int i = 0; i < n; i++) 
+            {
+                p=bf.readLine();
+                
+            }
+            
+        }
+        catch(IOException error)
+        {
+            JOptionPane.showMessageDialog(this,
+            "Error en el fichero--> "+error.toString(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        }
+        finally
+        {
+            try
+            {
+                if(bufer!=null)
+                {
+                    bufer.close();
+                }
+                if(isr!=null)
+                {
+                    isr.close();
+                }
+                if(fis!=null)
+                {
+                    fis.close();
+                }
+            }
+            catch(IOException e)
+            {
+                JOptionPane.showMessageDialog(this,
+                "Error en el fichero--> "+e.toString(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return p;
     }
     
     /**
@@ -70,17 +254,11 @@ public class NombreJugador extends javax.swing.JFrame {
         for (int i = 0; i < 5; i++) 
         {
             JLabel guion=new JLabel();
+            mostrarPalabra.add(guion);
             guion.setText("_");
             pBorde.add(guion);
             
         }
-       
-        
-        aleatorio=new Random();
-        int n_aleatorio=aleatorio.nextInt(27-0)+0;
-        palabra="";
-        
-        
         if (respuesta.isEmpty()==true)
         {
             lNombreJugador.setText("Sin nombre");
@@ -89,51 +267,12 @@ public class NombreJugador extends javax.swing.JFrame {
         {
             lNombreJugador.setText(respuesta);
         }
+       
         
+        aleatorio=new Random();
+        int n_aleatorio=aleatorio.nextInt(27-0)+0;
         
-        palabras=new ArrayList<>();
-        
-                       
-        palabras.add("ARPAS");
-        palabras.add("ARPAR");
-        palabras.add("AROCA");
-        palabras.add("ARNES");
-        palabras.add("ARMEN");
-        palabras.add("ARMAS");
-        palabras.add("ARMAR");
-        palabras.add("ARMES");
-        palabras.add("ARMON");
-        palabras.add("ARNAS");
-        palabras.add("ARMOS");
-        palabras.add("ARPEO");
-        palabras.add("ARPES");
-        palabras.add("ARRIO");
-        palabras.add("ARRIE");
-        palabras.add("ARRIA");
-        palabras.add("AÑEJO");
-        palabras.add("DAÑINO");
-        palabras.add("CHOTO");
-        palabras.add("CHOZA");
-        palabras.add("CIRCO");
-        palabras.add("CURVA");
-        palabras.add("CHIVO");
-        palabras.add("GATOS");
-        palabras.add("PERROS");
-        palabras.add("AYUDA");
-        palabras.add("FUEGO");
-        palabras.add("ADIOS");
-        palabras.add("DIOSA");
-        palabras.add("NIÑAS");
-        palabras.add("NIÑOS");
-        palabras.add("ZARPA");
-        palabras.add("ZORRO");
-        palabras.add("JARRAS");
-        palabras.add("RELOJ");
-        palabras.add("CERDO");
-        palabras.add("GUAPO");
-        palabras.add("GUAPA");
-        
-        palabra=palabras.get(n_aleatorio);
+        palabra=palabraAleatoria(n_aleatorio);
         
         
         letras=new ArrayList<>();
@@ -170,6 +309,7 @@ public class NombreJugador extends javax.swing.JFrame {
         
         for (int i = 0; i < 27; i++) 
         {
+            int posicion=i;
             String letra=letras.get(i);
             final JButton boton=new JButton();
             boton.setText(letras.get(i));
@@ -180,7 +320,19 @@ public class NombreJugador extends javax.swing.JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                       comprobarLetras(letra);            
+                    if(letras.get(posicion)=="Ñ")
+                    {
+                        if(comprobarN(posicion)==false)
+                        {
+                            fallos++;
+                        }
+                        
+                    }
+                    else if(comprobarLetras(letra, posicion)==false)
+                    {
+                        fallos++;
+                    }
+                    boton.setEnabled(false);
                 }
             });
         }
@@ -191,9 +343,9 @@ public class NombreJugador extends javax.swing.JFrame {
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method isr called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method isr always
+ regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -268,7 +420,7 @@ public class NombreJugador extends javax.swing.JFrame {
         pCentro.setLayout(new java.awt.GridLayout(1, 2));
 
         pImagen.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pImagen.setLayout(new java.awt.GridLayout());
+        pImagen.setLayout(new java.awt.GridLayout(1, 0));
 
         lImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/im1.jpg"))); // NOI18N
         pImagen.add(lImagen);
@@ -298,7 +450,7 @@ public class NombreJugador extends javax.swing.JFrame {
         lResolver.setText("Resolver");
         pPalabra.add(lResolver, java.awt.BorderLayout.WEST);
 
-        pTexto.setLayout(new java.awt.GridLayout());
+        pTexto.setLayout(new java.awt.GridLayout(1, 0));
 
         tfResolver.setPreferredSize(new java.awt.Dimension(130, 20));
         pTexto.add(tfResolver);
@@ -307,10 +459,15 @@ public class NombreJugador extends javax.swing.JFrame {
 
         pResolver.add(pPalabra);
 
-        pBotonResolver.setLayout(new java.awt.GridLayout());
+        pBotonResolver.setLayout(new java.awt.GridLayout(1, 0));
 
-        bResolver.setText("jButton1");
+        bResolver.setText("Resolver palabra");
         bResolver.setActionCommand("Resolver");
+        bResolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bResolverActionPerformed(evt);
+            }
+        });
         pBotonResolver.add(bResolver);
 
         pResolver.add(pBotonResolver);
@@ -353,13 +510,32 @@ public class NombreJugador extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bResolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResolverActionPerformed
+        
+        if(comprobarPalabra(tfResolver.getText())==true)
+        {
+            int respuesta = JOptionPane.showConfirmDialog(
+            this,
+            "¡Correcto! Has ganado, ¿otra partida?",
+            "Ganaste",
+            JOptionPane.YES_NO_OPTION);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this,
+            "¡Fallaste resolviendo la palabra!",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_bResolverActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* If Nimbus (introduced in Java SE 6) isr not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
