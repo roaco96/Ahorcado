@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,11 +37,18 @@ public class NombreJugador extends javax.swing.JFrame {
     private NombreJugador ventana;
     private Random aleatorio;
     private ArrayList<String> letras;
-    
+    private ArrayList<String> imagenes;
+    private static int puntos=0;
+    private static int n_letras=0;
     
     
     public void reiniciarAhorcado()
     {
+        lMensaje.setText("");
+        ImageIcon icono= new ImageIcon(this.getClass().getResource(imagenes.get(0)));
+        lImagen.setIcon(icono);
+        
+        lNumeroPuntos.setText("0");
         
         for (int i = 0; i < mostrarPalabra.size(); i++) 
         {
@@ -67,13 +75,66 @@ public class NombreJugador extends javax.swing.JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    
-                    if(comprobarLetras(letra, posicion)==false)
+                    if(letras.get(posicion)=="Ñ")
+                    {
+                        if(comprobarN(posicion)==false)
+                        {
+                            fallos++;
+                            if(fallos==6)
+                            {
+                                JOptionPane.showMessageDialog(null, 
+                                "Has perdido, la palabra era: "+palabra);
+                                reiniciarAhorcado();
+                            }
+                            else
+                            {
+                                ImageIcon icono= new ImageIcon(this.getClass().getResource(imagenes.get(fallos)));
+                                lImagen.setIcon(icono);
+                                lMensaje.setText("No hay "+letras.get(posicion)+" en la palabra.");
+                            }
+                            
+                        }
+                        else
+                        {
+                            int suma=puntos;
+                                
+                            suma=suma+Integer.valueOf(lNumeroPuntos.getText());
+                            lNumeroPuntos.setText(String.valueOf(suma));
+                            puntos=0;
+                            lMensaje.setText("Hay "+n_letras+" "+letras.get(posicion)+" en la palabra.");
+                            n_letras=0;
+                        }
+                        
+                    }
+                    else if(comprobarLetras(letra, posicion)==false)
                     {
                         fallos++;
+                        if(fallos==6)
+                        {
+                            JOptionPane.showMessageDialog(null, 
+                            "Has perdido, la palabra era: "+palabra);
+                            reiniciarAhorcado();
+
+                        }
+                        else
+                        {
+                            ImageIcon icono= new ImageIcon(this.getClass().getResource(imagenes.get(fallos)));
+                            lImagen.setIcon(icono);
+                            lMensaje.setText("No hay "+letras.get(posicion)+" en la palabra.");
+                        }
+                    }
+                    else
+                    {
+                        int suma=puntos;
+
+                        suma=suma+Integer.valueOf(lNumeroPuntos.getText());
+                        lNumeroPuntos.setText(String.valueOf(suma));
+                        puntos=0;
+                        lMensaje.setText("Hay "+n_letras+" "+letras.get(posicion)+" en la palabra.");
+                        n_letras=0;
                     }
                     boton.setEnabled(false);
-                       
+                    
                 }
             });
         }
@@ -90,13 +151,18 @@ public class NombreJugador extends javax.swing.JFrame {
             if(String.valueOf(palabra.charAt(i)).equals("Ñ")==true)
             {
                 mostrarPalabra.get(i).setText("Ñ");
+                puntos=puntos+5;
+                n_letras++;
             }
             else
             {
                 cierto=false;
             }
         }
-        
+        if(puntos!=0)
+        {
+            cierto=true;
+        }
         return cierto;
         
     }
@@ -115,10 +181,16 @@ public class NombreJugador extends javax.swing.JFrame {
             if(String.valueOf(palabra.charAt(i)).equals(letra)==true)
             {
                 mostrarPalabra.get(i).setText(letra);
+                puntos=puntos+5;
+                n_letras++;
             }
             else
             {
                 cierto=false;
+            }
+            if(puntos!=0)
+            {
+                cierto=true;
             }
         }
         
@@ -232,6 +304,8 @@ public class NombreJugador extends javax.swing.JFrame {
         return p;
     }
     
+    
+    
     /**
      * Creates new form NombreJugador
      */
@@ -249,6 +323,14 @@ public class NombreJugador extends javax.swing.JFrame {
         
         
         initComponents();
+        
+        imagenes= new ArrayList<>();
+        imagenes.add("imagenes/im1.jpg");
+        imagenes.add("imagenes/im2.jpg");
+        imagenes.add("imagenes/im3.jpg");
+        imagenes.add("imagenes/im4.jpg");
+        imagenes.add("imagenes/im5.jpg");
+        imagenes.add("imagenes/im6.jpg");
         
         mostrarPalabra=new ArrayList<>();
         for (int i = 0; i < 5; i++) 
@@ -325,14 +407,61 @@ public class NombreJugador extends javax.swing.JFrame {
                         if(comprobarN(posicion)==false)
                         {
                             fallos++;
+                            if(fallos==6)
+                            {
+                                JOptionPane.showMessageDialog(null, 
+                                "Has perdido, la palabra era: "+palabra);
+                                reiniciarAhorcado();
+                            }
+                            else
+                            {
+                                ImageIcon icono= new ImageIcon(this.getClass().getResource(imagenes.get(fallos)));
+                                lImagen.setIcon(icono);
+                                lMensaje.setText("No hay "+letras.get(posicion)+" en la palabra.");
+                            }
+                            
+                        }
+                        else
+                        {
+                            int suma=puntos;
+                                
+                            suma=suma+Integer.valueOf(lNumeroPuntos.getText());
+                            lNumeroPuntos.setText(String.valueOf(suma));
+                            puntos=0;
+                            lMensaje.setText("Hay "+n_letras+" "+letras.get(posicion)+" en la palabra.");
+                            n_letras=0;
                         }
                         
                     }
                     else if(comprobarLetras(letra, posicion)==false)
                     {
                         fallos++;
+                        if(fallos==6)
+                        {
+                            JOptionPane.showMessageDialog(null, 
+                            "Has perdido, la palabra era: "+palabra);
+                            reiniciarAhorcado();
+
+                        }
+                        else
+                        {
+                            ImageIcon icono= new ImageIcon(this.getClass().getResource(imagenes.get(fallos)));
+                            lImagen.setIcon(icono);
+                            lMensaje.setText("No hay "+letras.get(posicion)+" en la palabra.");
+                        }
+                    }
+                    else
+                    {
+                        int suma=puntos;
+
+                        suma=suma+Integer.valueOf(lNumeroPuntos.getText());
+                        lNumeroPuntos.setText(String.valueOf(suma));
+                        puntos=0;
+                        lMensaje.setText("Hay "+n_letras+" "+letras.get(posicion)+" en la palabra.");
+                        n_letras=0;
                     }
                     boton.setEnabled(false);
+                    
                 }
             });
         }
@@ -363,6 +492,8 @@ public class NombreJugador extends javax.swing.JFrame {
         pCentro = new javax.swing.JPanel();
         pImagen = new javax.swing.JPanel();
         lImagen = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        lMensaje = new javax.swing.JLabel();
         pDerecho = new javax.swing.JPanel();
         pEncabezado = new javax.swing.JPanel();
         lNombreJuego = new javax.swing.JLabel();
@@ -420,10 +551,15 @@ public class NombreJugador extends javax.swing.JFrame {
         pCentro.setLayout(new java.awt.GridLayout(1, 2));
 
         pImagen.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pImagen.setLayout(new java.awt.GridLayout(1, 0));
+        pImagen.setLayout(new java.awt.BorderLayout());
 
         lImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/im1.jpg"))); // NOI18N
-        pImagen.add(lImagen);
+        pImagen.add(lImagen, java.awt.BorderLayout.CENTER);
+
+        lMensaje.setText("----------");
+        jPanel1.add(lMensaje);
+
+        pImagen.add(jPanel1, java.awt.BorderLayout.SOUTH);
 
         pCentro.add(pImagen);
 
@@ -488,6 +624,11 @@ public class NombreJugador extends javax.swing.JFrame {
         mJuego.setText("Juego");
 
         miNueva.setText("Nueva partida");
+        miNueva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miNuevaActionPerformed(evt);
+            }
+        });
         mJuego.add(miNueva);
 
         miGuardar.setText("Guardar partida");
@@ -529,6 +670,10 @@ public class NombreJugador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bResolverActionPerformed
 
+    private void miNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNuevaActionPerformed
+        reiniciarAhorcado();
+    }//GEN-LAST:event_miNuevaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -566,8 +711,10 @@ public class NombreJugador extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bResolver;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lContador;
     private javax.swing.JLabel lImagen;
+    private javax.swing.JLabel lMensaje;
     private javax.swing.JLabel lNombreJuego;
     private javax.swing.JLabel lNombreJugador;
     private javax.swing.JLabel lNumeroPuntos;
