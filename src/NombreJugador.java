@@ -12,8 +12,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -632,9 +635,19 @@ public class NombreJugador extends javax.swing.JFrame {
         mJuego.add(miNueva);
 
         miGuardar.setText("Guardar partida");
+        miGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miGuardarActionPerformed(evt);
+            }
+        });
         mJuego.add(miGuardar);
 
         miCargar.setText("Cargar partida");
+        miCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miCargarActionPerformed(evt);
+            }
+        });
         mJuego.add(miCargar);
 
         mbDelJuego.add(mJuego);
@@ -673,6 +686,48 @@ public class NombreJugador extends javax.swing.JFrame {
     private void miNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNuevaActionPerformed
         reiniciarAhorcado();
     }//GEN-LAST:event_miNuevaActionPerformed
+
+    private void miCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCargarActionPerformed
+        JFileChooser elegir = new JFileChooser();
+        
+        elegir.setSelectedFile(new File("fichero.txt"));
+        
+        FileFilter filter = new FileNameExtensionFilter("Ficheros de texto", "txt");
+        elegir.addChoosableFileFilter(filter);
+        
+        int resultado = elegir.showOpenDialog(null);
+        
+        if (resultado == JFileChooser.APPROVE_OPTION)
+        {
+            
+            try 
+            {
+                
+                
+                
+            } 
+            catch (Exception ex) 
+            {
+                
+            } 
+            finally
+            {
+                try 
+                {
+                    
+                } 
+                catch (Exception ex)
+                {
+                    
+                } 
+            }
+            
+        }
+    }//GEN-LAST:event_miCargarActionPerformed
+
+    private void miGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miGuardarActionPerformed
+        
+    }//GEN-LAST:event_miGuardarActionPerformed
 
     /**
      * @param args the command line arguments
