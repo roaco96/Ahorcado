@@ -53,14 +53,25 @@ public class NombreJugador extends javax.swing.JFrame {
         
         lNumeroPuntos.setText("0");
         
-        for (int i = 0; i < mostrarPalabra.size(); i++) 
+        int n_aleatorio=aleatorio.nextInt(72-0)+0;
+        palabra=palabraAleatoria(n_aleatorio);
+        
+        pBorde.removeAll();
+        
+        mostrarPalabra.clear();
+        
+        for (int i = 0; i < palabra.length(); i++) 
         {
-            mostrarPalabra.get(i).setText("_");
+            JLabel guion=new JLabel();
+            mostrarPalabra.add(guion);
+            guion.setText("_");
+            pBorde.add(guion);
             
         }
+        
         fallos=0;
-        int n_aleatorio=aleatorio.nextInt(27-0)+0;
-        palabra=palabraAleatoria(n_aleatorio);
+        
+        
         
         ventana = this;
         
@@ -148,7 +159,7 @@ public class NombreJugador extends javax.swing.JFrame {
     public boolean comprobarN(int posicion)
     {
         boolean cierto=true;
-        for (int i = 0; i < mostrarPalabra.size(); i++) 
+        for (int i = 0; i < palabra.length(); i++) 
         {
 
             if(String.valueOf(palabra.charAt(i)).equals("Ñ")==true)
@@ -178,7 +189,7 @@ public class NombreJugador extends javax.swing.JFrame {
         boolean cierto=true;
         
         
-        for (int i = 0; i < mostrarPalabra.size(); i++) 
+        for (int i = 0; i < palabra.length(); i++) 
         {
 
             if(String.valueOf(palabra.charAt(i)).equals(letra)==true)
@@ -220,7 +231,7 @@ public class NombreJugador extends javax.swing.JFrame {
     {
         boolean c=true;
         int contador=0;
-        for (int i = 0; i < mostrarPalabra.size(); i++) 
+        for (int i = 0; i < palabra.length(); i++) 
         {
             if(mostrarPalabra.get(i).getText().equals("_")==true)
             {
@@ -335,15 +346,7 @@ public class NombreJugador extends javax.swing.JFrame {
         imagenes.add("imagenes/im5.jpg");
         imagenes.add("imagenes/im6.jpg");
         
-        mostrarPalabra=new ArrayList<>();
-        for (int i = 0; i < 5; i++) 
-        {
-            JLabel guion=new JLabel();
-            mostrarPalabra.add(guion);
-            guion.setText("_");
-            pBorde.add(guion);
-            
-        }
+        
         if (respuesta.isEmpty()==true)
         {
             lNombreJugador.setText("Sin nombre");
@@ -355,9 +358,19 @@ public class NombreJugador extends javax.swing.JFrame {
        
         
         aleatorio=new Random();
-        int n_aleatorio=aleatorio.nextInt(27-0)+0;
+        int n_aleatorio=aleatorio.nextInt(72-0)+0;
         
         palabra=palabraAleatoria(n_aleatorio);
+        
+        mostrarPalabra=new ArrayList<>();
+        for (int i = 0; i < palabra.length(); i++) 
+        {
+            JLabel guion=new JLabel();
+            mostrarPalabra.add(guion);
+            guion.setText("_");
+            pBorde.add(guion);
+            
+        }
         
         
         letras=new ArrayList<>();
@@ -673,6 +686,13 @@ public class NombreJugador extends javax.swing.JFrame {
             "¡Correcto! Has ganado, ¿otra partida?",
             "Ganaste",
             JOptionPane.YES_NO_OPTION);
+            
+            if(respuesta==0)
+            {
+                reiniciarAhorcado();
+                tfResolver.setText("");
+            }
+            
         }
         else
         {
