@@ -4,10 +4,8 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.ImageIcon;
@@ -43,10 +41,18 @@ public class NombreJugador extends javax.swing.JFrame {
     private ArrayList<String> imagenes;
     private static int puntos=0;
     private static int n_letras=0;
+    private Contador c;
+    private Thread ebra;
     
     
     public void reiniciarAhorcado()
     {
+        c.setHora(0);
+        c.setMinutos(0);
+        c.setSegundos(0);
+        
+        
+        
         lMensaje.setText("");
         ImageIcon icono= new ImageIcon(this.getClass().getResource(imagenes.get(0)));
         lImagen.setIcon(icono);
@@ -70,7 +76,6 @@ public class NombreJugador extends javax.swing.JFrame {
         }
         
         fallos=0;
-        
         
         
         ventana = this;
@@ -337,6 +342,11 @@ public class NombreJugador extends javax.swing.JFrame {
         
         
         initComponents();
+        
+        c=new Contador(lContador);
+        ebra=new Thread(c);
+        
+        ebra.start();
         
         imagenes= new ArrayList<>();
         imagenes.add("imagenes/im1.jpg");
